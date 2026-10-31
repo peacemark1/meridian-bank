@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+build/
+*.log
+.DS_Store
+
+# SQLite database — Render reseeds it on every deploy
+tsconfig.tsbuildinfo
+prisma/dev.db
+prisma/dev.db-journal
+
+.env
+.env.local
+.env*.local

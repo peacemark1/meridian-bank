@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id               String          @id @default(cuid())
+  email            String          @unique
+  name             String
+  passwordHash     String
+  role             String          @default("CUSTOMER") // CUSTOMER | EMPLOYEE | ADMIN
+  phone            String          @default("")
+  city             String          @default("")
+  createdAt        DateTime        @default(now())
+  accounts         Account[]
+  requestsMade     MoneyRequest[]  @relation("RequestedBy")
+  requestsReceived MoneyRequest[]  @relation("RequestedFrom")
+  accountUpdates   AccountUpdate[]
+}
+
+model Account {
+  id            String          @id @default(cuid())
+  user          User            @relation(fields: [userId], references: [id])
+  userId        String
+  accountNumber String          @unique
+  routingNumber String          @default("021000089") // Meridian ABA routing
+  type          String          @default("CHECKING") // CHECKING | SAVINGS
+  nickname      String          @default("")
+  balanceCents  Int             @default(0)
+  status        String          @default("ACTIVE") // ACTIVE | FROZEN
+  openedAt      DateTime        @default(now())
+  createdAt     DateTime        @default(now())
+  transactions  Transaction[]
+  updates       AccountUpdate[]
+  outgoingRefs  Transaction[]   @relation("CounterpartyAccount")
+  recurrings    Recurring[]
+}
+
+model AccountUpdate {
+  id        String   @id @default(cuid())
+  account   Account  @relation(fields: [accountId], references: [id])
+  accountId String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+}
+
+model Transaction {
+  id                    String    @id @default(cuid())
+  reference             String    @unique
+  account               Account   @relation(fields: [accountId], references: [id])
+  accountId             String
+  type                  String // DEPOSIT | WITHDRAW | TRANSFER_OUT | TRANSFER_IN | PAYMENT_OUT | PAYMENT_IN | ADJUSTMENT
+  status                String    @default("COMPLETED") // COMPLETED | PENDING | DECLINED
+  postAt                DateTime? // when a PENDING entry clears (simulated business clock)
+  settledAt             DateTime?
+  amountCents           Int // always positive
+  description           String    @default("")
+  balanceAfterCents     Int       @default(0)
+  counterparty          Account?  @relation("CounterpartyAccount", fields: [counterpartyAccountId], references: [id])
+  counterpartyAccountId String?
+  isFlagged             Boolean   @default(false)
+  flagNote              String?
+  createdAt             DateTime  @default(now())
+
+  @@unique([accountId, reference])
+}
+
+model Recurring {
+  id              String    @id @default(cuid())
+  reference       String    @unique
+  account         Account   @relation(fields: [accountId], references: [id])
+  accountId       String
+  toAccountNumber String
+  amountCents     Int
+  cadence         String // WEEKLY | BIWEEKLY | MONTHLY
+  label           String    @default("")
+  active          Boolean   @default(true)
+  nextRunAt       DateTime
+  lastRunAt       DateTime?
+  lastError       String?
+  createdAt       DateTime  @default(now())
+}
+
+model MoneyRequest {
+  id          String    @id @default(cuid())
+  reference   String    @unique
+  requester   User      @relation("RequestedBy", fields: [requesterId], references: [id])
+  requesterId String
+  recipient   User      @relation("RequestedFrom", fields: [recipientId], references: [id])
+  recipientId String
+  amountCents Int
+  note        String    @default("")
+  status      String    @default("PENDING") // PENDING | PAID | DECLINED
+  createdAt   DateTime  @default(now())
+  resolvedAt  DateTime?
+}
