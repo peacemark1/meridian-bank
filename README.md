@@ -7,6 +7,12 @@ A fictional American community-bank prototype with three portals, built with
 
 > Demo only. No real money, no real KYC, no regulatory anything.
 
+## Live demo
+
+**https://meridian-bank-2fi7.onrender.com** (Render free tier — first load after
+idle may take ~30s while the instance wakes; the SQLite database reseeds to the
+pristine demo state on every deploy).
+
 ## Run it
 
 ```bash
@@ -35,12 +41,25 @@ or open your own accounts via **Open an account** on the landing page.
 
 - **Customer (`/dashboard`)** — balance cards, overview, transfers between own
   accounts, payments to any Meridian customer, deposits/withdrawals, money
-  requests (send/receive/pay/decline), statements with CSV export.
+  requests (send/receive/pay/decline), scheduled/recurring transfers
+  (`/dashboard/recurring`), statements with CSV export.
 - **Employee (`/employee`)** — search the book of business, review flagged
   transactions, flag/unflag ledger entries.
 - **Admin (`/admin`)** — deposits-on-book stats, 14-day money-flow chart,
   freeze/unfreeze accounts, balance adjustments (always written to the ledger
-  as `ADJUSTMENT` transactions), full transaction oversight.
+  as `ADJUSTMENT` transactions), full transaction oversight, onboarding of new
+  customers (Form NMB-2 → temp credentials), post-now/decline control over
+  pending batch items.
+
+## Recurring & pending engine
+
+- Payments **≥ $2,500** enter the **overnight batch** as `PENDING` and post when
+  the simulated business clock reaches their `postAt` (a few minutes in demo
+  time). Admins can post them early or decline them from the account page.
+- `src/lib/clock.ts` implements `advanceBusinessClock()`: settles due pending
+  items and runs due `Recurring` instructions (weekly / biweekly / monthly).
+  It runs on portal page loads and behind `GET /api/bank/clock` — point a real
+  cron job (e.g. a Render cron hitting that endpoint) at it for hands-off time.
 
 ## Architecture notes
 
