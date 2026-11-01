@@ -17,7 +17,14 @@ export default async function EmployeePage({
   const users = await prisma.user.findMany({
     where: {
       role: "CUSTOMER",
-      ...(query ? { OR: [{ name: { contains: query } }, { email: { contains: query } }] } : {}),
+      ...(query
+        ? {
+            OR: [
+              { name: { contains: query, mode: "insensitive" } },
+              { email: { contains: query, mode: "insensitive" } },
+            ],
+          }
+        : {}),
     },
     include: {
       accounts: { select: { id: true, type: true, accountNumber: true, balanceCents: true, status: true } },

@@ -12,6 +12,14 @@ function daysAgo(n) {
 }
 
 async function main() {
+  const existingUsers = await db.user.count();
+  if (existingUsers > 0) {
+    // Idempotent seeding: the demo data already exists (any seeded environment
+    // runs this script again harmlessly — deploys, rebuilds, restarts).
+    console.log(`Seed skipped — ${existingUsers} users already present.`);
+    return;
+  }
+
   console.log("Seeding First National Meridian Bank…");
   await db.transaction.deleteMany({});
   await db.moneyRequest.deleteMany({});

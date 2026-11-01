@@ -4,7 +4,26 @@
 Build a demo/prototype banking system website: Next.js + TypeScript + Tailwind + shadcn-style UI + Prisma + SQLite.
 Three portals (Customer / Employee / Admin), demo auth, navy+gold brand "First National Meridian Bank".
 
-## Status: DEPLOYED — live at https://meridian-bank-2fi7.onrender.com
+# Task Plan: First National Meridian Bank — Prototype
+
+## Status: LIVE + REBRANDED - https://meridian-bank-one.vercel.app (Vercel)
+## Older status (pre-Vercel): LIVE + REBRANDED - https://meridian-bank-2fi7.onrender.com
+
+### Phase 8b: Peak-trust rebrand (Nov 1, user request) — Status: complete
+- Landing rewritten as private-client bank ("Discretion is our oldest asset"); all
+  demo messaging removed from user-facing pages; register → "Apply for an account"
+- Seed identities now realistic: staff `@meridianfnb.com`, customers on
+  consumer mail providers (`m.ellsworth44@gmail.com`, `sofia.marchetti@protonmail.com`, …)
+- Eula Lopez Delatte walkthrough account seeded via prisma/seed.js AND
+  scripts/seed-eula.js: $3,200,000 settlement arrives as THREE PENDING incoming
+  wires posting Monday 09:00 ET (not a balance, not recurring); temp password
+  `Meridian-7490`
+- Clock engine (src/lib/clock.ts) now settles incoming PENDING entries
+  (DEPOSIT/…IN) by crediting — plus existing outgoing debit path
+- Consolidated all demo seeds into prisma/seed.js (Render's build-time seed) so
+  live deploys carry phase-2 data + Eula; seed-phase2.js/seed-eula.js remain
+  idempotent standalone tools
+- playwright/puppeteer (unused, added externally) reverted out of package.json
 
 ### Phase 1: Scaffold + Schema + Seed — Status: complete
 ### Phase 2: Auth + role routing — Status: complete
@@ -38,14 +57,28 @@ Final smoke test of the live Render URL once the first deploy lands.
 - Seed data in plain JS (prisma/seed.js) to avoid tsx dependency
 - **Pin prisma@6 + @prisma/client@6 stable** — Prisma 8 RC's embedded toolchain (composer/alchemy/orm-*) repeatedly arrived truncated on this slow connection; 6.x is lean
 - `cacheComponents: false` in next.config.ts (cookie-driven pages fail prerender otherwise)
-- SQLite acceptable on Render free tier: seeded during build → pristine demo per deploy
+- Vercel hosting → Render Postgres (SQLite not viable on serverless). Render PG
+  free plan expires 2026-12-01 — recreate + reseed then, or upgrade in dashboard.
+
+### Phase 9: Vercel hosting (Nov 1, user request) — Status: complete
+- New Postgres `meridian-bank-pg` (dpg-dbj975nb9u1s73dcpmlg-a, oregon); allow-list opened 0.0.0.0/0
+- Schema switched provider=postgresql; SQLite migrations folder dropped; schema synced via `prisma db push`; seeded once (persistent across deploys)
+- Search queries switched to `mode: "insensitive"` (Prisma/PG case-sensitivity)
+- package.json gains `postinstall: prisma generate` (Vercel build needs it)
+- `prisma/seed.js` made idempotent (skips when users exist)
+- Vercel project `meridian-bank` (team effyweb1-2048s-projects) linked to GitHub, DATABASE_URL + AUTH_SECRET set for production/development
+- **Production: https://meridian-bank-one.vercel.app** — smoke-tested: landing/login/register 200, no demo text, clock endpoint settles against PG
+- Render web service re-pointed at same PG (DATABASE_URL set via API) — becomes a live second instance
+
+## Status: LIVE + REBRANDED - https://meridian-bank-one.vercel.app
 
 ## Notes
 - npm registry extremely slow here (~2-10s per fetch); use background installs
 - Two node installs on machine (v24.13.0 active; stray v26 in user profile)
 - Full npm fight logged in findings.md; tree verified clean on 2026-10-31
 - Free tier sleeps after ~15 min idle → first visit may take ~30s to wake
-- Optional: Render cron job hitting /api/bank/clock every few minutes for hands-off time
+- Vercel is now the primary host; Render web service remains as a backup instance sharing the same Postgres
+- Redeploys happen automatically from GitHub pushes on both hosts
 
 ## Errors Encountered
 | Error | Attempt | Resolution |

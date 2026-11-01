@@ -3,30 +3,34 @@
 *Banking on a Solid Foundation since 1892.*
 
 A fictional American community-bank prototype with three portals, built with
-**Next.js 16 · TypeScript · Tailwind v4 · Prisma · SQLite**.
+**Next.js 16 · TypeScript · Tailwind v4 · Prisma · PostgreSQL**.
 
 > Demo only. No real money, no real KYC, no regulatory anything.
 
 ## Live demo
 
-**https://meridian-bank-2fi7.onrender.com** (Render free tier — first load after
-idle may take ~30s while the instance wakes; the SQLite database reseeds to the
-pristine demo state on every deploy, and the seed includes all demo data:
-standing instructions, an overnight-batch payment, and Eula's Monday wires).
+**https://meridian-bank-one.vercel.app** (Vercel · PostgreSQL on Render).
+A dated but equivalent instance also runs on Render free tier; it may sleep
+30–60 s on first visit after idling.
+
+## Database
+
+- **Postgres hosted on Render** (`meridian-bank-pg`, oregon) — the demo data
+  persists across deploys now; the seed only runs on an empty database
+  (`prisma/seed.js` is idempotent).
+- Connection: `DATABASE_URL` (external URL, `?sslmode=require`) in `.env`.
+- ⚠️ Render's free plan expires this database on **2026-12-01**; upgrade it in
+  the dashboard or recreate + reseed after that date.
+- Apply schema with `npx prisma db push` (no migrations folder maintained).
 
 ## Run it
 
 ```bash
-npm run dev      # development (http://localhost:3000)
-# — or —
-npm run build && npm run start   # production
+npm run dev      # development (http://localhost:3000) — needs DATABASE_URL in .env
 ```
 
-The SQLite database (`prisma/dev.db`) ships seeded. To re-seed from scratch:
-
-```bash
-npx prisma migrate reset --force
-```
+Seed data loads only into an empty database; to rebuild demo state, create a
+fresh database, run `npx prisma db push && node prisma/seed.js`.
 
 ## Demo logins (password for all: `demo1234`)
 

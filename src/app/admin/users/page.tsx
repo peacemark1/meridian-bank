@@ -18,7 +18,12 @@ export default async function AdminUsersPage({
 
   const users = await prisma.user.findMany({
     where: query
-      ? { OR: [{ name: { contains: query } }, { email: { contains: query } }] }
+      ? {
+          OR: [
+            { name: { contains: query, mode: "insensitive" } },
+            { email: { contains: query, mode: "insensitive" } },
+          ],
+        }
       : {},
     include: { accounts: { orderBy: { createdAt: "asc" } } },
     orderBy: { createdAt: "asc" },
