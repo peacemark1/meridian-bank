@@ -11,7 +11,8 @@ A fictional American community-bank prototype with three portals, built with
 
 **https://meridian-bank-2fi7.onrender.com** (Render free tier — first load after
 idle may take ~30s while the instance wakes; the SQLite database reseeds to the
-pristine demo state on every deploy).
+pristine demo state on every deploy, and the seed includes all demo data:
+standing instructions, an overnight-batch payment, and Eula's Monday wires).
 
 ## Run it
 
@@ -31,9 +32,13 @@ npx prisma migrate reset --force
 
 | Role | Email | What you can do |
 |---|---|---|
-| Customer | `margaret@meridian.demo` | Dashboard, transfers, pay/decline requests, statements + CSV |
-| Employee | `tina@meridian.demo` | Customer directory (read-only), flagged transactions |
-| Admin | `admin@meridian.demo` | Ops dashboard, freeze accounts, audited balance adjustments, full ledger |
+| Customer | `m.ellsworth44@gmail.com` | Dashboard, transfers, standing instructions, pay/decline requests, statements + CSV |
+| Employee | `t.okafor@meridianfnb.com` | Customer directory (read-only), flagged transactions |
+| Admin | `r.kessler@meridianfnb.com` | Ops dashboard, freeze accounts, audited balance adjustments, full ledger |
+
+Private-client walkthrough: `eulalopez01@gmail.com` / temp password
+`Meridian-7490` — checking opens at $0.00 while a $3,200,000.00 settlement
+(arrives as three `PENDING` incoming wires) posts on the next Monday, 09:00 ET.
 
 or open your own accounts via **Open an account** on the landing page.
 

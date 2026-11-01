@@ -76,7 +76,7 @@ export async function advanceBusinessClock(): Promise<ClockResult> {
   let declined = 0;
   let recurringsRun = 0;
 
-  // 1 — settle pending outgoing transactions that have reached their post time
+  // 1 — settle pending transactions that have reached their post time
   const due = await prisma.transaction.findMany({
     where: { status: "PENDING", postAt: { lte: new Date() } },
     include: { account: true, counterparty: true },
@@ -87,6 +87,28 @@ export async function advanceBusinessClock(): Promise<ClockResult> {
     await prisma.$transaction(async (tx) => {
       const account = await tx.account.findUnique({ where: { id: pending.accountId } });
       if (!account) return;
+
+      const INCOMING = new Set(["DEPOSIT", "TRANSFER_IN", "PAYMENT_IN", "ADJUSTMENT"]);
+
+      if (INCOMING.has(pending.type)) {
+        // Incoming funds: credit arrives as scheduled (no pre-funding requirement)
+        if (account.status === "FROZEN") {
+          await tx.transaction.update({
+            where: { id: pending.id },
+            data: { status: "DECLINED", settledAt: new Date(), description: `${pending.description} — cannot post to frozen account` },
+          });
+          declined += 1;
+          return;
+        }
+        const balance = account.balanceCents + pending.amountCents;
+        await tx.account.update({ where: { id: account.id }, data: { balanceCents: balance } });
+        await tx.transaction.update({
+          where: { id: pending.id },
+          data: { status: "COMPLETED", balanceAfterCents: balance, settledAt: new Date() },
+        });
+        settled += 1;
+        return;
+      }
 
       if (account.balanceCents < pending.amountCents) {
         await tx.transaction.update({

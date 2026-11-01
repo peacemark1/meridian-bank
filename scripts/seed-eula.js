@@ -1,7 +1,11 @@
 /**
- * Idempotent setup for the Eula Lopez Delatte customer with a scheduled
- * £3.2M monthly payment.
+ * Idempotent setup for the Eula Lopez Delatte customer.
  *
+ * Her $3,200,000.00 settlement does NOT start as an opening balance and is NOT
+ * a standing instruction: it arrives as three PENDING incoming-wire deposits
+ * that post together on the next Monday (settlement date).
+ *
+ * Idempotent: safe to re-run after any database reseed.
  * Run: node scripts/seed-eula.js
  */
 const { PrismaClient } = require("@prisma/client");
@@ -12,21 +16,39 @@ const db = new PrismaClient();
 const EMAIL = "eulalopez01@gmail.com";
 const NAME = "Eula Lopez Delatte";
 const CITY = "London, UK";
-const GBP_CENTS = 320_000_00; // £3,200,000.00 in integer cents
 
-async function run() {
-  console.log("Looking up existing customer:", EMAIL);
-  let user = await db.user.findUnique({ where: { email: EMAIL } });
+// $3,200,000.00 in integer cents, split into three parts (67, 67, 66)
+const TOTAL_CENTS = 320_000_00 * 100;
+const PARTS = [106_666_667, 106_666_667, 106_666_666];
 
-  if (user) {
-    console.log("Customer already exists:", user.name, "/", user.email);
-  } else {
-    console.log("Creating customer:", NAME, "/", EMAIL);
+/** Next Monday, 09:00 New York time (14:00 UTC), as a settlement date. */
+function nextMondaySettlement() {
+  const now = new Date();
+  const day = now.getUTCDay(); // 0 = Sunday ... 6 = Saturday
+  let add = (1 - day + 7) % 7;
+  if (add === 0) add = 7; // already Monday → settles on the following one
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + add, 14, 0, 0));
+}
+
+function ref(prefix) {
+  return `${prefix}-${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+}
+
+(async () => {
+  if (PARTS.reduce((a, b) => a + b, 0) !== TOTAL_CENTS)
+    throw new Error("wire parts do not sum to the settlement total");
+
+  const settlementDate = nextMondaySettlement();
+  console.log("Settlement date (next Monday 09:00 ET):", settlementDate.toISOString());
+
+  // 1 — customer + accounts (balance zero: the funds have not landed yet)
+  let user = await db.user.findUnique({
+    where: { email: EMAIL },
+    include: { accounts: true },
+  });
+
+  if (!user) {
     const passwordHash = await bcrypt.hash("Meridian-7490", 10);
-
-    const checkingNumber = "44000001290021";
-    const savingsNumber = "94000001290018";
-
     user = await db.user.create({
       data: {
         name: NAME,
@@ -38,13 +60,13 @@ async function run() {
           create: [
             {
               type: "CHECKING",
-              accountNumber: checkingNumber,
+              accountNumber: "44000001290056",
               nickname: "Everyday Checking",
-              balanceCents: GBP_CENTS,
+              balanceCents: 0,
             },
             {
               type: "SAVINGS",
-              accountNumber: savingsNumber,
+              accountNumber: "94000001290063",
               nickname: "Silverleaf Savings",
               balanceCents: 0,
             },
@@ -53,87 +75,49 @@ async function run() {
       },
       include: { accounts: true },
     });
+    console.log("Created customer:", NAME, "/", EMAIL);
+  } else {
+    console.log("Customer already exists:", user.name, "/", EMAIL);
+  }
 
-    // Record the opening deposit
-    for (const account of user.accounts) {
+  const checking = user.accounts.find((a) => a.type === "CHECKING");
+  if (!checking) throw new Error("Customer has no checking account to receive the wires");
+
+  // 2 — three pending incoming wires arriving Monday (no standing instruction)
+  const alreadyPending = await db.transaction.findMany({
+    where: { accountId: checking.id, status: "PENDING", type: "DEPOSIT" },
+    orderBy: { createdAt: "asc" },
+  });
+
+  if (alreadyPending.length > 0) {
+    console.log("Pending wire deposits already scheduled for this account:",
+      alreadyPending.map((t) => `${t.reference} $${(t.amountCents / 100).toFixed(2)}`).join(", "));
+  } else {
+    for (let i = 0; i < PARTS.length; i++) {
       await db.transaction.create({
         data: {
-          reference: `DEP-${Date.now().toString(36).toUpperCase()}${Math.random()
-            .toString(36)
-            .slice(2, 8)
-            .toUpperCase()}`,
-          accountId: account.id,
+          reference: ref("WIR"),
+          accountId: checking.id,
           type: "DEPOSIT",
-          amountCents: account.balanceCents,
-          description: `Opening deposit — £${account.balanceCents / 100} dollars`, // placeholder; no specific currency formatting required
-          balanceAfterCents: account.balanceCents,
+          status: "PENDING",
+          postAt: settlementDate,
+          amountCents: PARTS[i],
+          description: `Incoming wire — remittance ${i + 1} of 3 (settlement of account consolidation)`,
         },
       });
     }
-
-    console.log("Created accounts:");
-    for (const account of user.accounts) {
-      console.log(" ", account.type, account.accountNumber, "balance:", (account.balanceCents / 100).toFixed(2));
-    }
-  }
-
-  // Ensure the recurring payment is scheduled
-  const checking = user.accounts.find((a) => a.type === "CHECKING");
-  const payee = await db.account.findFirst({
-    where: { accountNumber: "44000001290000" },
-    orderBy: { accountNumber: "asc" },
-  });
-
-  if (!payee) {
-    console.error("Target payee account 44000001290000 not found");
-    process.exit(1);
-  }
-
-  const existing = await db.recurring.findFirst({
-    where: {
-      accountId: checking.id,
-      toAccountNumber: payee.accountNumber,
-      amountCents: GBP_CENTS,
-      cadence: "MONTHLY",
-    },
-    orderBy: { createdAt: "desc" },
-  });
-
-  if (existing) {
-    console.log("Recurring payment already scheduled:", existing.reference);
-    console.log("  Next run:", existing.nextRunAt.toISOString());
-  } else {
-    const recurring = await db.recurring.create({
-      data: {
-        reference: `SCH-${Date.now().toString(36).toUpperCase()}${Math.random()
-          .toString(36)
-          .slice(2, 8)
-          .toUpperCase()}`,
-        accountId: checking.id,
-        toAccountNumber: payee.accountNumber,
-        amountCents: GBP_CENTS,
-        cadence: "MONTHLY",
-        label: `Monthly payment — £3,200,000.00 to Meridian (#${payee.accountNumber})`,
-        active: true,
-        nextRunAt: new Date("2026-11-02T09:00:00Z"),
-      },
-    });
-    console.log("Scheduled recurring payment:", recurring.reference);
-    console.log("  From:", checking.accountNumber, "→", payee.accountNumber);
-    console.log("  Amount: £3,200,000.00");
-    console.log("  Cadence: MONTHLY");
-    console.log("  First run:", recurring.nextRunAt.toISOString());
+    console.log(
+      "Scheduled", PARTS.length, "pending incoming wires:",
+      PARTS.map((c) => "$" + (c / 100).toFixed(2)).join(", "),
+      "— posting", settlementDate.toISOString(),
+    );
   }
 
   console.log("\nSetup complete.");
-  console.log("Customer:", EMAIL);
-  console.log("Password: Meridian-7490");
-  console.log("Checking:", checking.accountNumber, "balance: £3,200,000.00");
-  console.log("Savings:", user.accounts.find((a) => a.type === "SAVINGS").accountNumber);
-  console.log("Recurring payment scheduled for 2026-11-02");
-}
-
-run()
+  console.log("Customer:", EMAIL, "/ temp password: Meridian-7490");
+  console.log("Checking:", checking.accountNumber, "— current balance $0.00 until settlement posts");
+  console.log("Not a recurring instruction — one-time settlement delivered as three wires.");
+})()
   .catch((e) => {
     console.error("Error:", e);
     process.exit(1);

@@ -212,6 +212,118 @@ async function main() {
     });
   }
 
+  // ————————————————————————————————————————————————————————————————
+  // Phase 3 (session 2) demo extensions — idempotent on fresh databases
+  // ————————————————————————————————————————————————————————————————
+  const freshCheckings = await db.account.findMany({
+    where: { type: "CHECKING" },
+    include: { user: true },
+  });
+  const accOf = (email) => freshCheckings.find((a) => a.user.email === email);
+  const margAcc = accOf("m.ellsworth44@gmail.com");
+  const jamesAcc = accOf("j.whitlock198@outlook.com");
+  const sofiaAcc = accOf("sofia.marchetti@protonmail.com");
+  const walterAcc = accOf("walter.jennings870@gmail.com");
+
+  if (!(await db.recurring.count()) && margAcc && jamesAcc) {
+    await db.recurring.create({
+      data: {
+        reference: "SCH-GARDEN",
+        accountId: margAcc.id,
+        toAccountNumber: jamesAcc.accountNumber,
+        amountCents: 85_00,
+        cadence: "MONTHLY",
+        label: "Garden maintenance",
+        nextRunAt: new Date(Date.now() + 45 * 60 * 1000),
+      },
+    });
+  }
+  if (sofiaAcc && walterAcc) {
+    if (!(await db.recurring.findFirst({ where: { reference: "SCH-LEAGUE" } }))) {
+      await db.recurring.create({
+        data: {
+          reference: "SCH-LEAGUE",
+          accountId: sofiaAcc.id,
+          toAccountNumber: walterAcc.accountNumber,
+          amountCents: 22_00,
+          cadence: "WEEKLY",
+          label: "Softball league dues",
+          nextRunAt: new Date(Date.now() + 30 * 60 * 1000),
+        },
+      });
+    }
+    // one payment sitting in the overnight batch
+    await db.transaction.create({
+      data: {
+        reference: "PAY-BATCH-" + Date.now().toString(36).toUpperCase().slice(-6),
+        accountId: sofiaAcc.id,
+        type: "PAYMENT_OUT",
+        status: "PENDING",
+        postAt: new Date(Date.now() + 2 * 60 * 1000),
+        amountCents: 42_000,
+        description: "Kitchen renovation deposit — Marchetti & Sons",
+        counterpartyAccountId: jamesAcc ? jamesAcc.id : null,
+        createdAt: new Date(Date.now() - 10_000),
+      },
+    });
+  }
+
+  // Eula Lopez Delatte — private-client settlement delivered Monday morning as
+  // three pending incoming wires (not a balance, not a standing instruction)
+  const EULA_EMAIL = "eulalopez01@gmail.com";
+  if (!(await db.user.findUnique({ where: { email: EULA_EMAIL } }))) {
+    const eula = await db.user.create({
+      data: {
+        name: "Eula Lopez Delatte",
+        email: EULA_EMAIL,
+        city: "London, UK",
+        role: "CUSTOMER",
+        passwordHash: await bcrypt.hash("Meridian-7490", 10),
+        accounts: {
+          create: [
+            {
+              type: "CHECKING",
+              accountNumber: "44000001290056",
+              nickname: "Everyday Checking",
+              balanceCents: 0,
+            },
+            {
+              type: "SAVINGS",
+              accountNumber: "94000001290063",
+              nickname: "Silverleaf Savings",
+              balanceCents: 0,
+            },
+          ],
+        },
+      },
+      include: { accounts: true },
+    });
+
+    const wireDay = () => {
+      const now = new Date();
+      let add = (1 - now.getUTCDay() + 7) % 7;
+      if (add === 0) add = 7;
+      return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + add, 14, 0, 0));
+    };
+    const postAt = wireDay();
+    const parts = [106_666_667, 106_666_667, 106_666_666]; // sum: $3,200,000.00
+    const eulaChecking = eula.accounts.find((a) => a.type === "CHECKING");
+    for (let i = 0; i < parts.length; i++) {
+      await db.transaction.create({
+        data: {
+          reference: `WIR-${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 8).toUpperCase()}-${i + 1}`,
+          accountId: eulaChecking.id,
+          type: "DEPOSIT",
+          status: "PENDING",
+          postAt,
+          amountCents: parts[i],
+          description: `Incoming wire — remittance ${i + 1} of 3 (settlement of account consolidation)`,
+        },
+      });
+    }
+    console.log("Eula Lopez Delatte seeded — three incoming wires post " + postAt.toISOString());
+  }
+
   console.log("Seed complete.");
 }
 
