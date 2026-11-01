@@ -56,10 +56,11 @@ export function RegisterForm() {
       )}
 
       <button type="submit" disabled={pending} className={buttonClasses("primary") + " w-full"}>
-        {pending ? "Opening your accounts…" : "Open my accounts"}
+        {pending ? "Submitting your application…" : "Submit application"}
       </button>
       <p className="text-center text-xs text-navy-400">
-        Opening an account creates a free Meridian Checking and Savings pair.
+        By submitting you agree to the Deposit Account Agreement and the bank's
+        Funds Availability Policy. Your relationship banker will confirm activation.
       </p>
     </form>
   );

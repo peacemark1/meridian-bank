@@ -4,7 +4,7 @@ import { getSession } from "@/lib/auth";
 import { Wordmark } from "@/components/wordmark";
 import { RegisterForm } from "@/components/register-form";
 
-export const metadata = { title: "Open an account" };
+export const metadata = { title: "Apply for an account" };
 
 export default async function RegisterPage() {
   const session = await getSession();
@@ -14,9 +14,9 @@ export default async function RegisterPage() {
     <main className="flex min-h-screen items-center justify-center bg-navy-950 p-6">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl">
         <Wordmark href={null} />
-        <h1 className="mt-6 font-display text-2xl text-navy-900">Open your Meridian accounts</h1>
+        <h1 className="mt-6 font-display text-2xl text-navy-900">Apply for an account</h1>
         <p className="mt-1 mb-6 text-sm text-navy-400">
-          Free Checking + High-Yield Savings, opened in under a minute.
+          Personal checking and reserve savings, reviewed the same business day.
         </p>
         <RegisterForm />
         <p className="mt-6 text-center text-sm text-navy-400">

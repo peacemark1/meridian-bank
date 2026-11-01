@@ -42,7 +42,7 @@ export default async function RecurringPage() {
         <Card className="md:col-span-2">
           <CardHeader
             title="Your instructions"
-            subtitle="The bank clock runs these automatically"
+            subtitle="Processed automatically by our operations vault"
           />
           {recurrings.length === 0 ? (
             <EmptyState message="No standing instructions yet — schedule one on the left (great for rent)." />

@@ -23,7 +23,7 @@ async function main() {
   const admin = await db.user.create({
     data: {
       name: "Raymond Kessler",
-      email: "admin@meridian.demo",
+      email: "r.kessler@meridianfnb.com",
       passwordHash: password,
       role: "ADMIN",
     },
@@ -33,21 +33,21 @@ async function main() {
   await db.user.create({
     data: {
       name: "Tina Okafor",
-      email: "tina@meridian.demo",
+      email: "t.okafor@meridianfnb.com",
       passwordHash: password,
       role: "EMPLOYEE",
     },
   });
-  console.log("Employee: tina@meridian.demo / demo1234");
+  console.log("Employee: t.okafor@meridianfnb.com / demo1234");
 
   // Customers: name, email, checking cents, savings cents
   const customers = [
-    ["Margaret Ellsworth", "margaret@meridian.demo", 184250, 92000],
-    ["James Whitlock", "james@meridian.demo", 5420, 15000],
-    ["Priya Raman", "priya@meridian.demo", 61308, 240500],
-    ["Douglas Hobbs", "douglas@meridian.demo", 21340, 0],
-    ["Sofia Marchetti", "sofia@meridian.demo", 1298055, 43200],
-    ["Walter Jennings", "walter@meridian.demo", 89000, 5000],
+    ["Margaret Ellsworth", "m.ellsworth44@gmail.com", 184250, 92000],
+    ["James Whitlock", "j.whitlock198@outlook.com", 5420, 15000],
+    ["Priya Raman", "priya.raman912@gmail.com", 61308, 240500],
+    ["Douglas Hobbs", "dhobbs574@aol.com", 21340, 0],
+    ["Sofia Marchetti", "sofia.marchetti@protonmail.com", 1298055, 43200],
+    ["Walter Jennings", "walter.jennings870@gmail.com", 89000, 5000],
   ];
 
   let seq = 0;
@@ -119,8 +119,8 @@ async function main() {
   void savingsAccts;
 
   // interesting payments between customers
-  const margaret = checkings.find((a) => a.user.email === "margaret@meridian.demo");
-  const james = checkings.find((a) => a.user.email === "james@meridian.demo");
+  const margaret = checkings.find((a) => a.user.email === "m.ellsworth44@gmail.com");
+  const james = checkings.find((a) => a.user.email === "j.whitlock198@outlook.com");
   if (margaret && james) {
     await db.transaction.create({
       data: {
@@ -161,7 +161,7 @@ async function main() {
   }
 
   // one suspicious transaction for the compliance demo
-  const hobbs = checkings.find((a) => a.user.email === "douglas@meridian.demo");
+  const hobbs = checkings.find((a) => a.user.email === "dhobbs574@aol.com");
   if (hobbs) {
     await db.transaction.create({
       data: {
@@ -181,10 +181,10 @@ async function main() {
   // money requests
   const users = await db.user.findMany({ where: { role: "CUSTOMER" } });
   const byEmail = (e) => users.find((u) => u.email === e);
-  const priya = byEmail("priya@meridian.demo");
-  const margaretUser = byEmail("margaret@meridian.demo");
-  const sofia = byEmail("sofia@meridian.demo");
-  const walter = byEmail("walter@meridian.demo");
+  const priya = byEmail("priya.raman912@gmail.com");
+  const margaretUser = byEmail("m.ellsworth44@gmail.com");
+  const sofia = byEmail("sofia.marchetti@protonmail.com");
+  const walter = byEmail("walter.jennings870@gmail.com");
 
   if (priya && margaretUser) {
     await db.moneyRequest.create({

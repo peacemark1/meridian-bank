@@ -20,12 +20,12 @@ export default async function LoginPage() {
             “Safety and soundness, since 1892.”
           </h2>
           <p className="mt-3 text-sm text-navy-200">
-            Online banking from First National Meridian Bank — check balances, move money,
-            and pay people you trust.
+            Online banking for Meridian private clients — review your balances,
+            move funds, and manage your relationship in confidence.
           </p>
         </div>
         <p className="text-xs text-navy-400">
-          Member FDIC. Deposits insured up to $250,000.
+          Member FDIC. Deposits insured up to $250,000 per depositor, per ownership category.
         </p>
       </div>
 
@@ -46,7 +46,7 @@ export default async function LoginPage() {
               Open an account →
             </Link>
             <Link href="/" className="text-navy-400 hover:underline">
-              ← Back to meridianbank.com
+              ← Return to the homepage
             </Link>
           </div>
         </div>

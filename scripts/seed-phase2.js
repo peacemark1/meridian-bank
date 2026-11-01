@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const db = new PrismaClient();
 
 (async () => {
-  const emails = ["margaret@meridian.demo", "james@meridian.demo", "sofia@meridian.demo", "walter@meridian.demo"];
+  const emails = ["m.ellsworth44@gmail.com", "j.whitlock198@outlook.com", "sofia.marchetti@protonmail.com", "walter.jennings870@gmail.com"];
   const users = await db.user.findMany({
     where: { email: { in: emails } },
     include: { accounts: true },
@@ -18,8 +18,8 @@ const db = new PrismaClient();
   }
 
   // Margaret pays her gardener (James) monthly, like a real standing instruction
-  const margaret = checking(byEmail["margaret@meridian.demo"]);
-  const james = checking(byEmail["james@meridian.demo"]);
+  const margaret = checking(byEmail["m.ellsworth44@gmail.com"]);
+  const james = checking(byEmail["j.whitlock198@outlook.com"]);
   if (margaret && james) {
     await db.recurring.create({
       data: {
@@ -36,8 +36,8 @@ const db = new PrismaClient();
   }
 
   // Sofia scheduled her savings sweep (walter owes for the league — realistic!)
-  const sofia = checking(byEmail["sofia@meridian.demo"]);
-  const walter = checking(byEmail["walter@meridian.demo"]);
+  const sofia = checking(byEmail["sofia.marchetti@protonmail.com"]);
+  const walter = checking(byEmail["walter.jennings870@gmail.com"]);
   if (sofia && walter) {
     await db.recurring.create({
       data: {

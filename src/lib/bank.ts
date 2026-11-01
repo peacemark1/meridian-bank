@@ -227,7 +227,7 @@ export async function transferAction(formData: FormData): Promise<ActionState> {
     : result.reference === "PENDING"
       ? {
           success:
-            "Large payment scheduled — posts within one business day (a few minutes in this demo). Track it under Pending on your dashboard.",
+            "Large payment scheduled — funds post to the recipient within one business day. Track it under Pending on your dashboard.",
         }
       : { success: "Payment sent." };
 }

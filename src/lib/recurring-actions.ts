@@ -49,7 +49,7 @@ export async function createRecurringAction(
   });
 
   return {
-    success: `Scheduled ${label || "transfer"} — runs ${cadenceLabel}, first deposit leaves in about a minute (simulated clock).`,
+    success: `Scheduled ${label || "transfer"} — runs ${cadenceLabel}. Your first transfer is queued for the next processing window.`,
   };
 }
 
