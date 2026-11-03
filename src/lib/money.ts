@@ -28,6 +28,11 @@ export function formatAccountNumber(n: string): string {
   return n.replace(/(\d{4})(?=\d)/g, "$1 ");
 }
 
+/** UK sort codes render in three pairs: 04-11-27. */
+export function formatSortCode(n: string): string {
+  return n.replace(/\D/g, "").slice(0, 6).replace(/(\d{2})(?=\d)/g, "$1-");
+}
+
 export const txnTypeLabels: Record<string, string> = {
   DEPOSIT: "Deposit",
   WITHDRAW: "Withdrawal",

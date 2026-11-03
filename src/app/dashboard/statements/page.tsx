@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requireCustomer, getSessionUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { centsToDollars, formatAccountNumber, txnTypeLabels } from "@/lib/money";
+import { centsToDollars, formatAccountNumber, formatSortCode, txnTypeLabels } from "@/lib/money";
 import { Card, CardHeader, Badge, EmptyState, PageHeader, buttonClasses } from "@/components/ui";
 
 export const metadata = { title: "Statements" };
@@ -70,11 +70,11 @@ export default async function StatementsPage({
         <div className="border-b-2 border-navy-900 px-5 pt-5 pb-4">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="font-display text-xl text-navy-900">First National Meridian Bank</p>
+              <p className="font-display text-xl text-navy-900">First National Meridian Bank PLC</p>
               <p className="text-[10px] leading-relaxed text-navy-400">
-                200 Meridian Plaza · New York, NY 10004 · (212) 555-0189
+                8 St James's Square · London SW1Y 4JU · +44 (0)20 7946 0958
                 <br />
-                Member FDIC · Equal Housing Lender
+                Eligible deposits protected by the FSCS
               </p>
             </div>
             <div className="text-right">
@@ -94,7 +94,7 @@ export default async function StatementsPage({
           {selected && (
             <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded border border-navy-200 bg-navy-50 px-3 py-2">
               <p className="font-mono text-xs tracking-wider text-navy-900">
-                ⑆ {formatAccountNumber(selected.routingNumber)} ⑆ {formatAccountNumber(selected.accountNumber)} ⑆
+                ⑆ {formatSortCode(selected.routingNumber)} ⑆ {formatAccountNumber(selected.accountNumber)} ⑆
               </p>
               <p className="text-[11px] text-navy-500">
                 {user?.name} · {selected.type === "CHECKING" ? "Meridian Everyday Checking" : "Meridian Silverleaf Savings"}

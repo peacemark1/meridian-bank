@@ -54,7 +54,7 @@ export function NewCustomerForm() {
           </table>
 
           <p className="text-xs text-navy-400">
-            Routing/ABA 021000089 · Wire instructions are issued per-account on request.
+            Sort code 04-11-27 · Wire instructions are issued per-account on request.
             The customer also received a welcome letter under Secure Messages.
           </p>
 

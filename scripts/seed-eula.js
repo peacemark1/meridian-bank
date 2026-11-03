@@ -21,7 +21,7 @@ const CITY = "London, UK";
 const TOTAL_CENTS = 320_000_00 * 100;
 const PARTS = [106_666_667, 106_666_667, 106_666_666];
 
-/** Next Monday, 09:00 New York time (14:00 UTC), as a settlement date. */
+/** Next Monday, 14:00 UTC (09:00 New York · 14:00 London), as a settlement date. */
 function nextMondaySettlement() {
   const now = new Date();
   const day = now.getUTCDay(); // 0 = Sunday ... 6 = Saturday

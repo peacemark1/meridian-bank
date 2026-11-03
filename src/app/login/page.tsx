@@ -25,7 +25,7 @@ export default async function LoginPage() {
           </p>
         </div>
         <p className="text-xs text-navy-400">
-          Member FDIC. Deposits insured up to $250,000 per depositor, per ownership category.
+          FSCS protected. Eligible deposits up to £85,000 per depositor, per authorisation.
         </p>
       </div>
 
@@ -39,7 +39,7 @@ export default async function LoginPage() {
           <LoginForm />
           <div className="mt-5 rounded-lg bg-navy-50 border border-navy-100 px-3 py-2.5 text-xs text-navy-500">
             🔐 We will never contact you asking for your password, PIN, or one-time code.
-            Suspicious activity? Call (212) 555-0189. Member FDIC — deposits insured to $250,000.
+            Suspicious activity? Call +44 (0)20 7946 0958. FSCS protected — deposits up to £85,000.
           </div>
           <div className="mt-6 flex items-center justify-between text-sm">
             <Link href="/register" className="font-semibold text-navy-600 hover:underline">

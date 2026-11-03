@@ -10,6 +10,19 @@ Three portals (Customer / Employee / Admin), demo auth, navy+gold brand "First N
 ## Older status (pre-Vercel): LIVE + REBRANDED - https://meridian-bank-2fi7.onrender.com
 ## Working copy: C:\Users\USER\bank (F:\Bank corrupted at NTFS level — do not write there)
 
+### Phase 11: UK repositioning (Nov 3, user request) — Status: complete
+- Bank relocated: London Head Office (8 St James's Square) first in the offices
+  list; New York demoted to Americas Office; chartered by Act of Parliament 1892
+- US number replaced everywhere: (212) 555-0189 → +44 (0)20 7946 0958
+  (landing, login security notice, statement letterhead, demo-memo seed)
+- US regulatory language → UK equivalents: FDIC $250k → FSCS £85k, ABA routing
+  → sort code, "Member FDIC/Equal Housing" → "Authorised by the PRA / FSCS
+  protected"; footer now "First National Meridian Bank PLC · Registered in
+  England · 8 St James's Square, London SW1Y 4JU · Sort code 04-11-27"
+- `formatSortCode()` helper added; routing default (schema) and all 13 seeded
+  accounts updated to 041127 (`scripts/set-uk-sort-code.js`)
+- Admin account record branch: London · St James's (037)
+
 ### Phase 10: UK office + EUR display currency (Nov 2, user request) — Status: complete
 - Homepage "Our offices" adds London — Continental & UK Private Office, 8 St James's Square
 - Per-user display currency: `User.currency` (USD/EUR/GBP, default USD) + currency-aware

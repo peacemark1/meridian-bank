@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { centsToDollars, formatAccountNumber, txnTypeLabels } from "@/lib/money";
+import { centsToDollars, formatAccountNumber, formatSortCode, txnTypeLabels } from "@/lib/money";
 import { Card, CardHeader, Badge, PageHeader, LinkButton, buttonClasses } from "@/components/ui";
 import { AccountControls } from "@/components/account-controls";
 import { MemoComposer } from "@/components/memo-composer";
@@ -61,10 +61,10 @@ export default async function AccountDetailPage({
           </div>
           <div className="bg-white px-5 py-4">
             <p className="text-[10px] font-bold uppercase tracking-widest text-navy-400">
-              Routing / ABA
+              Sort code
             </p>
             <p className="mt-1 font-mono text-lg tracking-wider text-navy-900">
-              {formatAccountNumber(account.routingNumber)}
+              {formatSortCode(account.routingNumber)}
             </p>
           </div>
           <div className="bg-white px-5 py-4">
@@ -94,7 +94,7 @@ export default async function AccountDetailPage({
               })}
             </p>
             <p className="text-xs text-navy-400">
-              Branch: New York · Plaza (037)
+              Branch: London · St James's (037)
             </p>
           </div>
           <div className="bg-white px-5 py-4">

@@ -2,7 +2,7 @@
 
 *Banking on a Solid Foundation since 1892.*
 
-A fictional American community-bank prototype with three portals, built with
+A fictional UK-headquartered private-bank prototype with three portals, built with
 **Next.js 16 · TypeScript · Tailwind v4 · Prisma · PostgreSQL**.
 
 > Demo only. No real money, no real KYC, no regulatory anything.
@@ -43,7 +43,8 @@ fresh database, run `npx prisma db push && node prisma/seed.js`.
 Private-client walkthrough: `eulalopez01@gmail.com` / temp password
 `Meridian-7490` — a UK-resident customer whose portal displays amounts in
 **euro (€)**. Checking opens at 0.00 while a 3,200,000.00 settlement
-(arrives as three `PENDING` incoming wires) posts on the next Monday, 09:00 ET.
+(arrives as three `PENDING` incoming wires) posts on the next Monday, 14:00 UTC
+(09:00 New York / 14:00 London).
 
 or open your own accounts via **Open an account** on the landing page.
 

@@ -165,7 +165,7 @@ export default async function DashboardPage() {
         </p>
         <p className="mt-2 font-display text-4xl text-gold-300">{centsToDollars(total, currency)}</p>
         <p className="mt-2 text-xs text-navy-300">
-          Deposits at First National Meridian Bank are FDIC-insured to $250,000 per depositor.
+          Deposits at First National Meridian Bank are FSCS protected to £85,000 per depositor.
         </p>
       </div>
 

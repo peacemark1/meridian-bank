@@ -45,7 +45,7 @@ async function nextAccountNumber(prefix: string) {
 }
 
 const WELCOME_MEMO = (name: string, checking: string, savings: string | null) =>
-  `Dear ${name.split(" ")[0]},\n\nWelcome to First National Meridian Bank. Your accounts are now open:\n${checking}${savings ? `\n${savings}` : ""}\n\nYour relationship banker will be in touch within 5 business days to review your statement delivery preferences. Deposits at First National Meridian Bank are insured by the FDIC up to $250,000 per depositor, for each account ownership category.\n\nSincerely,\nThe Meridian New Accounts Desk`;
+  `Dear ${name.split(" ")[0]},\n\nWelcome to First National Meridian Bank. Your accounts are now open:\n${checking}${savings ? `\n${savings}` : ""}\n\nYour relationship banker will be in touch within 5 business days to review your statement delivery preferences. Eligible deposits at First National Meridian Bank are protected by the Financial Services Compensation Scheme up to £85,000 per depositor.\n\nSincerely,\nThe Meridian New Accounts Desk`;
 
 export async function createCustomerAction(
   _prev: CreateCustomerState,

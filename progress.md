@@ -33,6 +33,21 @@
 - Render web service now shares the PG database as a second live instance (DATABASE_URL set via REST API)
 - Free Render DB expires 2026-12-01 — flag to user
 
+## Session 6 (Nov 3, 2026) — UK repositioning
+
+- User: "change the usa number to a uk number, and change the bank location to uk"
+- Phone (212) 555-0189 → +44 (0)20 7946 0958 (Ofcom drama/fiction range) in
+  landing contact, login security notice, statement letterhead, demo-memo seed
+- Head office moved to London (8 St James's Square); New York → Americas Office;
+  "Chartered by Act of Parliament" replaces NY Legislature blurb
+- Regulatory copy swapped US→UK: FDIC $250,000 → FSCS £85,000; ABA routing →
+  sort code 04-11-27 (`formatSortCode()` helper, schema default, one-off
+  `scripts/set-uk-sort-code.js` updating all 13 live accounts); "Member FDIC /
+  Equal Housing Lender" → "Authorised by the PRA / FSCS protected"; footer
+  rebranded "First National Meridian Bank PLC · Registered in England"
+- Admin account spec: "Branch: London · St James's (037)"
+- README repositioned as UK-headquartered private bank
+
 ## Session 5 (Nov 2, 2026) — Work moved to C:\Users\USER\bank; UK office + EUR for Eula
 
 - **F:\Bank corrupted at the NTFS level** (`.git` unreadable, working tree

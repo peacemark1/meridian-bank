@@ -39,7 +39,7 @@ export default async function LandingPage() {
       {/* Hero */}
       <section className="relative mx-auto max-w-6xl px-6 pt-16 pb-20">
         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-gold-300">
-          Private Banking &amp; Wealth Reserve · Member FDIC
+          Private Banking &amp; Wealth Reserve · FSCS protected
         </p>
         <h1 className="font-display text-5xl leading-tight text-white">
           Discretion is our
@@ -70,7 +70,7 @@ export default async function LandingPage() {
         {/* Relationship metrics */}
         <div className="mt-14 grid gap-x-10 gap-y-6 border-t border-navy-800/70 pt-8 sm:grid-cols-4">
           {[
-            { n: "1892", l: "Chartered by Act of the New York Legislature" },
+            { n: "1892", l: "Chartered by Act of Parliament" },
             { n: "$5.4B", l: "Assets under administration" },
             { n: "24,600", l: "Private client relationships under management" },
             { n: "1 : 60", l: "Relationship managers to clients — no call centers" },
@@ -139,8 +139,8 @@ export default async function LandingPage() {
               <li className="flex gap-3">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-400" aria-hidden />
                 <span>
-                  Deposits insured by the FDIC up to $250,000 per depositor, per
-                  ownership category — the full faith and credit of the United States.
+                  Deposits protected by the FSCS up to £85,000 per depositor, per
+                  banking licence — delivered with the discretion of the Square Mile.
                 </span>
               </li>
               <li className="flex gap-3">
@@ -163,10 +163,10 @@ export default async function LandingPage() {
             <h2 className="font-display text-2xl text-white">Our offices</h2>
             <ul className="mt-5 space-y-4 text-sm leading-relaxed text-navy-200">
               {[
-                { c: "New York — Head Office", a: "1 Meridian Row, Financial District" },
+                { c: "London — Head Office", a: "8 St James's Square, St James's" },
+                { c: "New York — Americas Office", a: "1 Meridian Row, Financial District" },
                 { c: "Chicago", a: "208 North LaSalle Street, Suite 1900" },
                 { c: "Dallas", a: "2900 Cedar Springs Road, Uptown Tower" },
-                { c: "London — Continental & UK Private Office", a: "8 St James's Square, St James's" },
               ].map((b) => (
                 <li key={b.c}>
                   <p className="font-medium text-white">{b.c}</p>
@@ -174,7 +174,7 @@ export default async function LandingPage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-6 text-sm text-navy-300">Office hours 8:30 – 5:00 ET (London 9:00 – 5:30 GMT) · Private appointments available after hours.</p>
+            <p className="mt-6 text-sm text-navy-300">Office hours 9:00 – 5:30 GMT (New York 8:30 – 5:00 ET) · Private appointments available after hours.</p>
           </div>
         </div>
       </section>
@@ -204,7 +204,7 @@ export default async function LandingPage() {
         <div className="mx-auto max-w-6xl px-6 py-12 text-sm text-navy-200">
           <h2 className="font-display text-xl text-gold-300">Private Client Desk</h2>
           <p className="mt-3">
-            Telephone <span className="text-white">(212) 555-0189</span> ·
+            Telephone <span className="text-white">+44 (0)20 7946 0958</span> ·
             Secure messages through online banking are answered within one business day.
           </p>
         </div>
@@ -213,13 +213,14 @@ export default async function LandingPage() {
       <footer className="border-t border-navy-800 py-8 text-xs text-navy-400">
         <div className="mx-auto max-w-6xl space-y-2 px-6 text-center">
           <p>
-            First National Meridian Bank · Corporate Charter No. C-1892 · NMLS #410772 ·
-            Routing (ABA) #021000089 · A New York state-chartered commercial bank
+            First National Meridian Bank PLC · Registered in England No. RC-1892 ·
+            8 St James's Square, London SW1Y 4JU · Sort code 04-11-27 ·
+            Authorised by the Prudential Regulation Authority
           </p>
           <p>
             Deposit products are offered only at our banking offices. Credit and
-            lending products are subject to credit approval. Member FDIC · Equal
-            Housing Lender
+            lending products are subject to credit approval. Eligible deposits are
+            protected by the Financial Services Compensation Scheme
           </p>
           <p className="pt-2 font-medium tracking-wide text-navy-300">
             © {new Date().getFullYear()} First National Meridian Bank — all rights reserved

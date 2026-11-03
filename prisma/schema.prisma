@@ -28,7 +28,7 @@ model Account {
   user          User            @relation(fields: [userId], references: [id])
   userId        String
   accountNumber String          @unique
-  routingNumber String          @default("021000089") // Meridian ABA routing
+  routingNumber String          @default("041127") // Meridian UK sort code
   type          String          @default("CHECKING") // CHECKING | SAVINGS
   nickname      String          @default("")
   balanceCents  Int             @default(0)

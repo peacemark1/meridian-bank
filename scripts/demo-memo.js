@@ -25,7 +25,7 @@ const db = new PrismaClient();
         "overdraft grace assessment from October 4 has been waived as a courtesy. A " +
         "credit adjustment will post to your checking account within one business day.\n\n" +
         "If you have any questions, reply through Secure Messages or call your relationship " +
-        "banker directly at (212) 555-0189 extension 4411.\n\n" +
+        "banker directly at +44 (0)20 7946 0958 extension 4411.\n\n" +
         "Sincerely,\n" +
         "Tina Okafor\n" +
         "Branch Operations, First National Meridian Bank",
