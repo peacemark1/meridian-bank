@@ -29,7 +29,8 @@ Three portals (Customer / Employee / Admin), demo auth, navy+gold brand "First N
   `centsToDollars` / `currencySymbol` in `src/lib/money.ts`
 - Threaded through all customer pages (viewer currency), staff/admin pages (owner
   currency), forms, and the CSV export; bank-level admin aggregates stay USD
-- Eula Lopez Delatte (UK) set to EUR: live DB via `scripts/set-eula-currency.js`,
+- Eula Lopez Delatte (UK) display currency: first EUR, then set to GBP on the
+  user's follow-up request — live DB via `scripts/set-eula-currency.js`,
   plus `prisma/seed.js` and `scripts/seed-eula.js` for future reseeds
 
 ### Phase 8b: Peak-trust rebrand (Nov 1, user request) — Status: complete

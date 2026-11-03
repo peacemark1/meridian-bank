@@ -286,7 +286,7 @@ async function main() {
         email: EULA_EMAIL,
         city: "London, UK",
         role: "CUSTOMER",
-        currency: "EUR",
+        currency: "GBP",
         passwordHash: await bcrypt.hash("Meridian-7490", 10),
         accounts: {
           create: [

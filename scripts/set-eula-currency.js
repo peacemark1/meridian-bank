@@ -1,5 +1,5 @@
-// One-off: display currency EUR for Eula Lopez Delatte (UK-resident private client).
-// Safe to re-run: sets only when the row's currency isn't already EUR.
+// One-off: display currency GBP for Eula Lopez Delatte (UK-resident private client).
+// Safe to re-run: sets only when the row's currency isn't already GBP.
 const { PrismaClient } = require("@prisma/client");
 const db = new PrismaClient();
 
@@ -11,12 +11,12 @@ async function main() {
     console.error("User not found:", EMAIL);
     process.exit(1);
   }
-  if (user.currency === "EUR") {
-    console.log("Already EUR — no change.");
+  if (user.currency === "GBP") {
+    console.log("Already GBP — no change.");
     return;
   }
-  await db.user.update({ where: { email: EMAIL }, data: { currency: "EUR" } });
-  console.log(`${user.name}: display currency set to EUR`);
+  await db.user.update({ where: { email: EMAIL }, data: { currency: "GBP" } });
+  console.log(`${user.name}: display currency set to GBP`);
 }
 
 main()

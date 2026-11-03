@@ -66,10 +66,10 @@
   aggregates (`/admin`, `/admin/oversight`) intentionally remain USD. CSV
   export states the statement currency. Form amount fields show the owner's
   symbol/label.
-- Eula Lopez Delatte (`eulalopez01@gmail.com`, London UK) set to
-  `currency=EUR` in the live database
+- Eula Lopez Delatte (UK) set to `currency=EUR→GBP` (user changed to GBP after
+  the repositioning request) on the live database
   (`scripts/set-eula-currency.js`, re-runnable) and in both seeds
-  (`prisma/seed.js`, `scripts/seed-eula.js`).
+  (`prisma/seed.js`, `scripts/seed-eula.js`); README walkthrough now says £
 - Landing page gains a fourth office: **London — Continental & UK Private
   Office, 8 St James's Square** (hours line notes 9:00–5:30 GMT).
 - Machine quirk: npm corrupted `@next/swc-win32-x64-msvc` again ("not a valid
