@@ -2,6 +2,7 @@
 
 import { useState, useActionState } from "react";
 import { transferAction, type ActionState } from "@/lib/bank";
+import { currencySymbol } from "@/lib/money";
 import { buttonClasses } from "@/components/ui";
 import { cn } from "@/lib/cn";
 
@@ -15,9 +16,11 @@ const initial: ActionState = {};
 export function TransferForm({
   accounts,
   contacts,
+  currency = "USD",
 }: {
   accounts: AccountOption[];
   contacts: { accountNumber: string; label: string }[];
+  currency?: string;
 }) {
   const [state, action, pending] = useActionState<ActionState, FormData>(
     (prev, formData) => transferAction(formData),
@@ -95,11 +98,11 @@ export function TransferForm({
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label htmlFor="t-amount" className="mb-1 block text-sm font-medium text-navy-800">
-            Amount (USD)
+            Amount ({currency})
           </label>
           <div className="relative">
             <span className="pointer-events-none absolute left-3 top-2.5 text-sm text-navy-400">
-              $
+              {currencySymbol(currency)}
             </span>
             <input
               id="t-amount"

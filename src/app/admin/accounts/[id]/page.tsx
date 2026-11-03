@@ -29,6 +29,7 @@ export default async function AccountDetailPage({
   });
   if (!account) notFound();
   await advanceBusinessClock();
+  const currency = account.user.currency;
 
   const APY = account.type === "SAVINGS" ? "3.98%" : "0.01%";
   const product =
@@ -71,7 +72,7 @@ export default async function AccountDetailPage({
               Ledger balance
             </p>
             <p className="mt-1 font-display text-2xl text-navy-900">
-              {centsToDollars(account.balanceCents)}
+              {centsToDollars(account.balanceCents, currency)}
             </p>
           </div>
           <div className="bg-white px-5 py-4">
@@ -163,10 +164,10 @@ export default async function AccountDetailPage({
                       </td>
                       <td className={"whitespace-nowrap px-3 py-2 text-right font-semibold " + (incoming ? "text-emerald-600" : "text-navy-900")}>
                         {incoming ? "+" : "−"}
-                        {centsToDollars(t.amountCents)}
+                        {centsToDollars(t.amountCents, currency)}
                       </td>
                       <td className="whitespace-nowrap px-5 py-2 text-right text-navy-500">
-                        {centsToDollars(t.balanceAfterCents)}
+                        {centsToDollars(t.balanceAfterCents, currency)}
                       </td>
                       <td className="px-2 py-2 text-right">
                         {t.status === "PENDING" ? (

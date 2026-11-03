@@ -55,6 +55,7 @@ function ref(prefix) {
         email: EMAIL,
         city: CITY,
         role: "CUSTOMER",
+        currency: "EUR",
         passwordHash,
         accounts: {
           create: [

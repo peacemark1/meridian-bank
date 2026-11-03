@@ -1,16 +1,23 @@
-/** All money is stored as integer cents. */
+/** All money is stored as integer cents of the row's display currency. */
+
+const SUPPORTED = new Set(["USD", "EUR", "GBP"]);
 
 export function parseDollarsToCents(input: string): number | null {
-  const value = Number.parseFloat(input.replace(/[$,\s]/g, ""));
+  const value = Number.parseFloat(input.replace(/[$€£,\s]/g, ""));
   if (!Number.isFinite(value) || value <= 0) return null;
   return Math.round(value * 100);
 }
 
-export function centsToDollars(cents: number): string {
+export function centsToDollars(cents: number, currency: string = "USD"): string {
   return (cents / 100).toLocaleString("en-US", {
     style: "currency",
-    currency: "USD",
+    currency: SUPPORTED.has(currency) ? currency : "USD",
   });
+}
+
+/** Display symbol for input affordances (the "$"/"€"/"£" in amount fields). */
+export function currencySymbol(currency: string = "USD"): string {
+  return { USD: "$", EUR: "€", GBP: "£" }[SUPPORTED.has(currency) ? currency : "USD"] ?? "$";
 }
 
 export function centsToPlain(cents: number): string {

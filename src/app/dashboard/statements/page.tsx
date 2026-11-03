@@ -14,6 +14,7 @@ export default async function StatementsPage({
   const session = await requireCustomer();
   const user = await getSessionUser();
   const params = await searchParams;
+  const currency = user?.currency ?? "USD";
 
   const accounts = await prisma.account.findMany({
     where: { userId: session.userId },
@@ -104,7 +105,7 @@ export default async function StatementsPage({
         </div>
         <CardHeader
           title={selected ? `Meridian ${selected.type === "CHECKING" ? "Checking" : "Savings"}` : "Statement"}
-          subtitle={selected ? `Current balance ${centsToDollars(selected.balanceCents)} · last 100 entries` : undefined}
+          subtitle={selected ? `Current balance ${centsToDollars(selected.balanceCents, currency)} · last 100 entries` : undefined}
           action={
             selected && (
               <Link
@@ -167,10 +168,10 @@ export default async function StatementsPage({
                         }
                       >
                         {incoming ? "+" : "−"}
-                        {centsToDollars(t.amountCents)}
+                        {centsToDollars(t.amountCents, currency)}
                       </td>
                       <td className="whitespace-nowrap px-5 py-3 text-right text-navy-500">
-                        {centsToDollars(t.balanceAfterCents)}
+                        {centsToDollars(t.balanceAfterCents, currency)}
                       </td>
                     </tr>
                   );

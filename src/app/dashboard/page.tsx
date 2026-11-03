@@ -18,6 +18,7 @@ export default async function DashboardPage() {
   const session = await requireCustomer();
   const user = await getSessionUser();
   await advanceBusinessClock();
+  const currency = user?.currency ?? "USD";
 
   const accounts = await prisma.account.findMany({
     where: { userId: session.userId },
@@ -79,7 +80,7 @@ export default async function DashboardPage() {
               <strong>{pendingIncoming.length}</strong> money request
               {pendingIncoming.length > 1 ? "s" : ""} waiting for your response — totaling{" "}
               <strong>
-                {centsToDollars(pendingIncoming.reduce((s, r) => s + r.amountCents, 0))}
+                {centsToDollars(pendingIncoming.reduce((s, r) => s + r.amountCents, 0), currency)}
               </strong>
             </p>
             <Link href="/dashboard/requests" className={buttonClasses("gold")}>
@@ -97,7 +98,7 @@ export default async function DashboardPage() {
               <li key={t.id} className="flex flex-wrap items-center justify-between gap-2 px-5 py-3">
                 <div>
                   <p className="text-sm font-medium text-navy-900">
-                    {centsToDollars(t.amountCents)}{" "}
+                    {centsToDollars(t.amountCents, currency)}{" "}
                     <span className="font-normal text-navy-500">{t.type === "PAYMENT_OUT" ? "payment" : "transfer"}</span>
                   </p>
                   <p className="text-xs text-navy-400">{t.description || t.reference}</p>
@@ -162,7 +163,7 @@ export default async function DashboardPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-navy-300">
           Total relationship balance
         </p>
-        <p className="mt-2 font-display text-4xl text-gold-300">{centsToDollars(total)}</p>
+        <p className="mt-2 font-display text-4xl text-gold-300">{centsToDollars(total, currency)}</p>
         <p className="mt-2 text-xs text-navy-300">
           Deposits at First National Meridian Bank are FDIC-insured to $250,000 per depositor.
         </p>
@@ -184,7 +185,7 @@ export default async function DashboardPage() {
               ···· {formatAccountNumber(a.accountNumber)}
             </p>
             <p className="mt-4 font-display text-3xl text-navy-900">
-              {centsToDollars(a.balanceCents)}
+              {centsToDollars(a.balanceCents, currency)}
             </p>
           </Card>
         ))}
@@ -234,11 +235,11 @@ export default async function DashboardPage() {
                       }
                     >
                       {incoming ? "+" : "−"}
-                      {centsToDollars(t.amountCents)}
+                      {centsToDollars(t.amountCents, currency)}
                     </p>
                     <p className="text-xs text-navy-400">
                       {txnColor(t.type)}
-                      bal {centsToDollars(t.balanceAfterCents)}
+                      bal {centsToDollars(t.balanceAfterCents, currency)}
                     </p>
                   </div>
                 </li>

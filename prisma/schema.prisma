@@ -15,6 +15,7 @@ model User {
   role             String          @default("CUSTOMER") // CUSTOMER | EMPLOYEE | ADMIN
   phone            String          @default("")
   city             String          @default("")
+  currency         String          @default("USD") // ISO 4217 display currency (USD | EUR | GBP)
   createdAt        DateTime        @default(now())
   accounts         Account[]
   requestsMade     MoneyRequest[]  @relation("RequestedBy")

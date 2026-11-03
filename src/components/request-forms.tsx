@@ -2,11 +2,12 @@
 
 import { useActionState, useTransition } from "react";
 import { requestMoneyAction, respondRequestAction, type ActionState } from "@/lib/bank";
+import { currencySymbol } from "@/lib/money";
 import { buttonClasses } from "@/components/ui";
 
 const initial: ActionState = {};
 
-export function RequestForm() {
+export function RequestForm({ currency = "USD" }: { currency?: string }) {
   const [state, action, pending] = useActionState<ActionState, FormData>(
     (prev, formData) => requestMoneyAction(formData),
     initial,
@@ -30,11 +31,11 @@ export function RequestForm() {
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label htmlFor="rq-amount" className="mb-1 block text-sm font-medium text-navy-800">
-            Amount (USD)
+            Amount ({currency})
           </label>
           <div className="relative">
             <span className="pointer-events-none absolute left-3 top-2.5 text-sm text-navy-400">
-              $
+              {currencySymbol(currency)}
             </span>
             <input
               id="rq-amount"

@@ -1,4 +1,4 @@
-import { requireCustomer } from "@/lib/auth";
+import { requireCustomer, getSessionUser } from "@/lib/auth";
 import { advanceBusinessClock } from "@/lib/clock";
 import { prisma } from "@/lib/prisma";
 import { centsToDollars, formatAccountNumber } from "@/lib/money";
@@ -9,7 +9,9 @@ export const metadata = { title: "Scheduled transfers" };
 
 export default async function RecurringPage() {
   const session = await requireCustomer();
+  const user = await getSessionUser();
   await advanceBusinessClock();
+  const currency = user?.currency ?? "USD";
 
   const accounts = await prisma.account.findMany({
     where: { userId: session.userId },
@@ -34,8 +36,9 @@ export default async function RecurringPage() {
           <NewRecurringForm
             accounts={accounts.map((a) => ({
               id: a.id,
-              label: `${a.type === "CHECKING" ? "Checking" : "Savings"} ····${a.accountNumber.slice(-4)} — ${centsToDollars(a.balanceCents)}`,
+              label: `${a.type === "CHECKING" ? "Checking" : "Savings"} ····${a.accountNumber.slice(-4)} — ${centsToDollars(a.balanceCents, currency)}`,
             }))}
+            currency={currency}
           />
         </Card>
 
@@ -52,7 +55,7 @@ export default async function RecurringPage() {
                 <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
                   <div>
                     <p className="text-sm font-semibold text-navy-900">
-                      {centsToDollars(r.amountCents)}
+                      {centsToDollars(r.amountCents, currency)}
                       <span className="ml-1 font-normal text-navy-500">
                         {r.cadence === "WEEKLY" ? "weekly" : r.cadence === "BIWEEKLY" ? "biweekly" : "monthly"}
                         {r.label ? ` — ${r.label}` : ""}

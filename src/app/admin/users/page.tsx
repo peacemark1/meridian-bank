@@ -76,7 +76,7 @@ export default async function AdminUsersPage({
                         </span>
                       </Link>
                       <p className="mt-0.5 text-sm text-navy-500">
-                        {centsToDollars(a.balanceCents)}
+                        {centsToDollars(a.balanceCents, u.currency)}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">

@@ -1,4 +1,4 @@
-import { requireCustomer } from "@/lib/auth";
+import { requireCustomer, getSessionUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { centsToDollars } from "@/lib/money";
 import { Card, CardHeader, Badge, EmptyState, PageHeader } from "@/components/ui";
@@ -8,6 +8,8 @@ export const metadata = { title: "Money requests" };
 
 export default async function RequestsPage() {
   const session = await requireCustomer();
+  const user = await getSessionUser();
+  const currency = user?.currency ?? "USD";
 
   const [incoming, outgoing] = await Promise.all([
     prisma.moneyRequest.findMany({
@@ -37,7 +39,7 @@ export default async function RequestsPage() {
       <div className="grid gap-6 md:grid-cols-3">
         <Card>
           <CardHeader title="New request" />
-          <RequestForm />
+          <RequestForm currency={currency} />
         </Card>
 
         <Card className="md:col-span-2">
@@ -50,7 +52,7 @@ export default async function RequestsPage() {
                 <li key={r.id} className="flex items-center justify-between gap-4 px-5 py-4">
                   <div>
                     <p className="text-sm font-semibold text-navy-900">
-                      {centsToDollars(r.amountCents)}{" "}
+                      {centsToDollars(r.amountCents, currency)}{" "}
                       <span className="font-normal text-navy-500">
                         from {r.requester.name}
                       </span>
@@ -83,7 +85,7 @@ export default async function RequestsPage() {
               <li key={r.id} className="flex items-center justify-between px-5 py-4">
                 <div>
                   <p className="text-sm font-semibold text-navy-900">
-                    {centsToDollars(r.amountCents)}{" "}
+                    {centsToDollars(r.amountCents, currency)}{" "}
                     <span className="font-normal text-navy-500">to {r.recipient.name}</span>
                   </p>
                   <p className="mt-0.5 text-xs text-navy-400">

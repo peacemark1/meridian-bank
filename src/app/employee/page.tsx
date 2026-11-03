@@ -69,7 +69,7 @@ export default async function EmployeePage({
                     {formatAccountNumber(a.accountNumber)}
                   </p>
                   <p className="mt-1 text-lg font-semibold text-navy-900">
-                    {centsToDollars(a.balanceCents)}
+                    {centsToDollars(a.balanceCents, u.currency)}
                   </p>
                 </div>
               ))}

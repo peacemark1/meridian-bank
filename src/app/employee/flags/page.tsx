@@ -30,7 +30,7 @@ export default async function EmployeeFlagsPage() {
               <li key={t.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
                 <div>
                   <p className="text-sm font-semibold text-navy-900">
-                    {txnTypeLabels[t.type]} — {centsToDollars(t.amountCents)}
+                    {txnTypeLabels[t.type]} — {centsToDollars(t.amountCents, t.account.user.currency)}
                   </p>
                   <p className="text-xs text-navy-500">
                     {t.account.user.name} (····{t.account.accountNumber.slice(-4)})

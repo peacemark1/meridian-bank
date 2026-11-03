@@ -1,4 +1,4 @@
-import { requireCustomer } from "@/lib/auth";
+import { requireCustomer, getSessionUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { centsToDollars, formatAccountNumber } from "@/lib/money";
 import { Card, CardHeader, PageHeader } from "@/components/ui";
@@ -8,6 +8,8 @@ export const metadata = { title: "Transfer money" };
 
 export default async function TransferPage() {
   const session = await requireCustomer();
+  const user = await getSessionUser();
+  const currency = user?.currency ?? "USD";
 
   const myAccounts = await prisma.account.findMany({
     where: { userId: session.userId, status: "ACTIVE" },
@@ -16,7 +18,7 @@ export default async function TransferPage() {
 
   const accountOptions = myAccounts.map((a) => ({
     id: a.id,
-    label: `${a.type === "CHECKING" ? "Checking" : "Savings"} ····${a.accountNumber.slice(-4)} — ${centsToDollars(a.balanceCents)}`,
+    label: `${a.type === "CHECKING" ? "Checking" : "Savings"} ····${a.accountNumber.slice(-4)} — ${centsToDollars(a.balanceCents, currency)}`,
   }));
 
   const ownTargets = myAccounts.map((a) => ({
@@ -54,7 +56,7 @@ export default async function TransferPage() {
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="md:col-span-2">
           <CardHeader title="New transfer" subtitle="Runs on MeridianNet — settles in seconds" />
-          <TransferForm accounts={accountOptions} contacts={ownTargets} />
+          <TransferForm accounts={accountOptions} contacts={ownTargets} currency={currency} />
         </Card>
         <div className="space-y-4">
           <Card className="p-5">

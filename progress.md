@@ -33,6 +33,33 @@
 - Render web service now shares the PG database as a second live instance (DATABASE_URL set via REST API)
 - Free Render DB expires 2026-12-01 — flag to user
 
+## Session 5 (Nov 2, 2026) — Work moved to C:\Users\USER\bank; UK office + EUR for Eula
+
+- **F:\Bank corrupted at the NTFS level** (`.git` unreadable, working tree
+  truncated, mkdir flapping). Repo history safe on GitHub (`744ebd7`); the
+  corrupt `.git` was quarantined as `F:\Bank\.git-corrupt.bak`. F:\Bank is
+  left untouched for the user to back up / chkdsk. **The project now lives at
+  `C:\Users\USER\bank`** (fresh clone of origin/main) — continue all work here.
+- Per-user display currency: `User.currency` column (default `USD`,
+  supported USD/EUR/GBP) in `prisma/schema.prisma`;
+  `centsToDollars(cents, currency)` + new `currencySymbol()` in
+  `src/lib/money.ts`.
+- Currency threaded through: customer portal (`/dashboard`, `/actions`,
+  `/transfer`, `/recurring`, `/requests`, `/statements`) uses the viewer's
+  currency; staff views (`/employee`, `/employee/flags`, `/admin/users`,
+  `/admin/accounts/[id]`) use the account owner's currency; bank-level
+  aggregates (`/admin`, `/admin/oversight`) intentionally remain USD. CSV
+  export states the statement currency. Form amount fields show the owner's
+  symbol/label.
+- Eula Lopez Delatte (`eulalopez01@gmail.com`, London UK) set to
+  `currency=EUR` in the live database
+  (`scripts/set-eula-currency.js`, re-runnable) and in both seeds
+  (`prisma/seed.js`, `scripts/seed-eula.js`).
+- Landing page gains a fourth office: **London — Continental & UK Private
+  Office, 8 St James's Square** (hours line notes 9:00–5:30 GMT).
+- Machine quirk: npm corrupted `@next/swc-win32-x64-msvc` again ("not a valid
+  Win32 application") — deleting the package dir + reinstall fixes the build.
+
 ## Session 3 (Nov 1, 2026) — Peak-trust rebrand
 
 - Landing page: private-bank rewrite (metrics row, six reserved services, offices, application CTA); no demo/prototype text anywhere user-facing

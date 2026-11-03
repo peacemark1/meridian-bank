@@ -166,6 +166,7 @@ export default async function LandingPage() {
                 { c: "New York — Head Office", a: "1 Meridian Row, Financial District" },
                 { c: "Chicago", a: "208 North LaSalle Street, Suite 1900" },
                 { c: "Dallas", a: "2900 Cedar Springs Road, Uptown Tower" },
+                { c: "London — Continental & UK Private Office", a: "8 St James's Square, St James's" },
               ].map((b) => (
                 <li key={b.c}>
                   <p className="font-medium text-white">{b.c}</p>
@@ -173,7 +174,7 @@ export default async function LandingPage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-6 text-sm text-navy-300">Office hours 8:30 – 5:00 ET · Private appointments available after hours.</p>
+            <p className="mt-6 text-sm text-navy-300">Office hours 8:30 – 5:00 ET (London 9:00 – 5:30 GMT) · Private appointments available after hours.</p>
           </div>
         </div>
       </section>

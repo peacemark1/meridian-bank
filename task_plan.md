@@ -8,6 +8,16 @@ Three portals (Customer / Employee / Admin), demo auth, navy+gold brand "First N
 
 ## Status: LIVE + REBRANDED - https://meridian-bank-one.vercel.app (Vercel)
 ## Older status (pre-Vercel): LIVE + REBRANDED - https://meridian-bank-2fi7.onrender.com
+## Working copy: C:\Users\USER\bank (F:\Bank corrupted at NTFS level — do not write there)
+
+### Phase 10: UK office + EUR display currency (Nov 2, user request) — Status: complete
+- Homepage "Our offices" adds London — Continental & UK Private Office, 8 St James's Square
+- Per-user display currency: `User.currency` (USD/EUR/GBP, default USD) + currency-aware
+  `centsToDollars` / `currencySymbol` in `src/lib/money.ts`
+- Threaded through all customer pages (viewer currency), staff/admin pages (owner
+  currency), forms, and the CSV export; bank-level admin aggregates stay USD
+- Eula Lopez Delatte (UK) set to EUR: live DB via `scripts/set-eula-currency.js`,
+  plus `prisma/seed.js` and `scripts/seed-eula.js` for future reseeds
 
 ### Phase 8b: Peak-trust rebrand (Nov 1, user request) — Status: complete
 - Landing rewritten as private-client bank ("Discretion is our oldest asset"); all

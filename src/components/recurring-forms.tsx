@@ -2,14 +2,17 @@
 
 import { useActionState, useTransition } from "react";
 import { createRecurringAction, toggleRecurringAction, deleteRecurringAction, type RecurringState } from "@/lib/recurring-actions";
+import { currencySymbol } from "@/lib/money";
 import { buttonClasses } from "@/components/ui";
 
 const initial: RecurringState = {};
 
 export function NewRecurringForm({
   accounts,
+  currency = "USD",
 }: {
   accounts: { id: string; label: string }[];
+  currency?: string;
 }) {
   const [state, action, pending] = useActionState<RecurringState, FormData>(
     (prev, fd) => createRecurringAction(prev, fd),
@@ -54,7 +57,7 @@ export function NewRecurringForm({
             Each run
           </label>
           <div className="relative">
-            <span className="pointer-events-none absolute left-3 top-2.5 text-sm text-navy-400">$</span>
+            <span className="pointer-events-none absolute left-3 top-2.5 text-sm text-navy-400">{currencySymbol(currency)}</span>
             <input
               id="ramount"
               name="amount"

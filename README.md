@@ -41,7 +41,8 @@ fresh database, run `npx prisma db push && node prisma/seed.js`.
 | Admin | `r.kessler@meridianfnb.com` | Ops dashboard, freeze accounts, audited balance adjustments, full ledger |
 
 Private-client walkthrough: `eulalopez01@gmail.com` / temp password
-`Meridian-7490` — checking opens at $0.00 while a $3,200,000.00 settlement
+`Meridian-7490` — a UK-resident customer whose portal displays amounts in
+**euro (€)**. Checking opens at 0.00 while a 3,200,000.00 settlement
 (arrives as three `PENDING` incoming wires) posts on the next Monday, 09:00 ET.
 
 or open your own accounts via **Open an account** on the landing page.

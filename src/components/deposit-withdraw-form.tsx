@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { depositAction, withdrawAction } from "@/lib/bank";
 import { buttonClasses } from "@/components/ui";
+import { currencySymbol } from "@/lib/money";
 import type { ActionState } from "@/lib/bank";
 
 interface AccountOption {
@@ -13,9 +14,11 @@ interface AccountOption {
 export function DepositWithdrawForm({
   accounts,
   mode,
+  currency = "USD",
 }: {
   accounts: AccountOption[];
   mode: "deposit" | "withdraw";
+  currency?: string;
 }) {
   const [state, setState] = useState<ActionState>({});
   const [pending, startTransition] = useTransition();
@@ -53,11 +56,11 @@ export function DepositWithdrawForm({
       </div>
       <div>
         <label htmlFor="amount" className="mb-1 block text-sm font-medium text-navy-800">
-          Amount (USD)
+          Amount ({currency})
         </label>
         <div className="relative">
           <span className="pointer-events-none absolute left-3 top-2.5 text-sm text-navy-400">
-            $
+            {currencySymbol(currency)}
           </span>
           <input
             id="amount"

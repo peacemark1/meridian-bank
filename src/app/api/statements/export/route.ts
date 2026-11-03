@@ -45,7 +45,7 @@ export async function GET(request: Request) {
     ].join(","),
   );
 
-  const csv = `Meridian Bank Statement,,\nAccount ${account.accountNumber} (${account.type}),${account.user.name},\n\n${header.join(",")}\n${lines.join("\n")}\n`;
+  const csv = `Meridian Bank Statement,,\nAccount ${account.accountNumber} (${account.type}),${account.user.name},Currency: ${account.user.currency},\n\n${header.join(",")}\n${lines.join("\n")}\n`;
 
   return new NextResponse(csv, {
     headers: {
